@@ -19,7 +19,7 @@ export default function AnalysisTabs({ summary, skillGaps, roadmap, keywords }: 
     { id: 0, name: 'Resume Summary', icon: FileText, color: 'primary' },
     { id: 1, name: 'Skill Gaps', icon: Target, color: 'red' },
     { id: 2, name: 'Learning Roadmap', icon: Map, color: 'green' },
-    { id: 3, name: 'Job Opportunities', icon: Briefcase, color: 'purple' },
+    { id: 3, name: 'Keywords', icon: Briefcase, color: 'purple' },
   ]
 
   const contents = [

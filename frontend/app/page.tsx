@@ -9,8 +9,9 @@ import ResumeUploader from '@/components/ResumeUploader'
 import AnalysisTabs from '@/components/AnalysisTabs'
 import JobCard from '@/components/JobCard'
 import Footer from '@/components/Footer'
-import { MapPin, CheckCircle, Loader2 } from 'lucide-react'
+import { MapPin, CheckCircle, Loader2, AlertCircle } from 'lucide-react'
 import { analyzeResume, fetchJobs } from '@/lib/api'
+import { Job } from '@/lib/types'
 
 const locations = [
   { value: 'India', label: 'India' },
@@ -35,13 +36,15 @@ export default function Home() {
     keywords: '',
   })
   
-  const [jobs, setJobs] = useState<any[]>([])
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [error, setError] = useState<string | null>(null)
 
   const handleAnalyze = async () => {
     if (!selectedFile) return
 
     setIsAnalyzing(true)
     setAnalysisComplete(false)
+    setError(null)
 
     try {
       const response = await analyzeResume(selectedFile, selectedLocation)
@@ -59,8 +62,10 @@ export default function Home() {
       const jobsResponse = await fetchJobs(response.data.keywords, selectedLocation)
       setJobs(jobsResponse.data || [])
       setIsSearchingJobs(false)
-    } catch (error) {
-      console.error('Analysis failed:', error)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Analysis failed. Please try again.'
+      setError(message)
+      console.error('Analysis failed:', err)
     } finally {
       setIsAnalyzing(false)
     }
@@ -169,6 +174,13 @@ export default function Home() {
                   <p className="text-sm text-slate-500 text-center">
                     Please upload your resume to begin
                   </p>
+                )}
+
+                {error && (
+                  <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    <span>{error}</span>
+                  </div>
                 )}
               </div>
             </motion.div>

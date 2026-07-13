@@ -14,9 +14,17 @@ interface ResumeUploaderProps {
 
 export default function ResumeUploader({ onFileSelect, selectedFile, isLoading }: ResumeUploaderProps) {
   const [dragActive, setDragActive] = useState(false)
+  const [sizeError, setSizeError] = useState(false)
+
+  const MAX_SIZE = 10 * 1024 * 1024 // 10MB
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles[0]) {
+      if (acceptedFiles[0].size > MAX_SIZE) {
+        setSizeError(true)
+        return
+      }
+      setSizeError(false)
       onFileSelect(acceptedFiles[0])
     }
   }, [onFileSelect])
@@ -116,6 +124,17 @@ export default function ResumeUploader({ onFileSelect, selectedFile, isLoading }
         >
           <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary-600 border-t-transparent" />
           <span className="text-slate-600 font-medium">Processing your resume...</span>
+        </motion.div>
+      )}
+
+      {sizeError && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-4 flex items-center justify-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm"
+        >
+          <AlertCircle className="w-4 h-4" />
+          <span>File size exceeds 10MB limit. Please choose a smaller file.</span>
         </motion.div>
       )}
     </motion.div>

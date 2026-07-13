@@ -1,4 +1,4 @@
-# 🚀 NextHire - AI-Powered Job Recommendation System
+# NextHire - AI-Powered Job Recommendation System
 
 <div align="center">
 
@@ -12,18 +12,17 @@
 
 </div>
 
-## ✨ Features
+## Features
 
-- 📄 **Smart Resume Upload** - Beautiful drag & drop interface with validation
-- 🤖 **AI-Powered Analysis** - Gemini-powered resume and skill gap analysis
-- 🎯 **Personalized Roadmaps** - Custom learning paths based on your profile
-- 💼 **Job Matching** - AI-suggested keywords for targeted job hunting
-- 🔍 **Multiple Job Sources** - Integration with JoinRise, JSearch, LinkedIn, Naukri
-- ✨ **Beautiful UI** - Modern, responsive design with smooth animations
-- 📱 **Fully Responsive** - Perfect on mobile, tablet, and desktop
-- 🔒 **Privacy First** - Your data is secure and never shared
+- **Smart Resume Upload** - Drag & drop interface with PDF validation and 10MB size limit
+- **AI-Powered Analysis** - Gemini-powered resume analysis, skill gap identification, and learning roadmap generation
+- **Personalized Roadmaps** - Custom learning paths based on your profile
+- **Job Matching** - AI-suggested keywords for targeted job hunting
+- **Job Source Integration** - JoinRise job API for matching opportunities
+- **Beautiful UI** - Modern, responsive design with smooth Framer Motion animations
+- **Fully Responsive** - Works on mobile, tablet, and desktop
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Framework**: Next.js 14 (App Router)
@@ -36,9 +35,9 @@
 - **Framework**: FastAPI (Python)
 - **AI**: Google Gemini API
 - **PDF Processing**: PyMuPDF
-- **Job APIs**: JoinRise, JSearch, Apify
+- **Job API**: JoinRise
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 NextHire/
@@ -60,25 +59,25 @@ NextHire/
 │   │   └── api.ts           # API client
 │   ├── package.json
 │   ├── tailwind.config.js
-│   ├── tsconfig.json
-│   └── .env.local           # Environment variables (DO NOT COMMIT)
+│   └── tsconfig.json
 │
 ├── backend/                  # FastAPI backend
 │   ├── main.py              # FastAPI application
 │   ├── requirements.txt     # Python dependencies
-│   └── .env                 # Environment variables (DO NOT COMMIT)
+│   └── .env.example         # Environment variables template
 │
-├── src/                      # Original Streamlit code (deprecated)
+├── src/                      # Legacy Streamlit code (deprecated)
 │   ├── helper.py
 │   ├── job_api.py
 │   └── __init__.py
 │
-├── .gitignore               # Git ignore file
-├── README.md                # This file
-└── LICENSE                  # MIT License
+├── main.py                   # Legacy Streamlit app (deprecated)
+├── .gitignore
+├── README.md
+└── LICENSE
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -131,7 +130,6 @@ cp .env.example .env
 # Edit .env and add your API keys:
 # GEMINI_API_KEY=your_gemini_api_key
 # JSEARCH_API_KEY=your_jsearch_api_key (optional)
-# APIFY_API_TOKEN=your_apify_token (optional)
 
 # Start server
 uvicorn main:app --reload --port 8000
@@ -139,7 +137,7 @@ uvicorn main:app --reload --port 8000
 
 Visit [http://localhost:8000/docs](http://localhost:8000/docs) for API documentation
 
-## 🔑 Environment Variables
+## Environment Variables
 
 ### Frontend (.env.local)
 
@@ -153,18 +151,18 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 # Required
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# Optional - for additional job sources
+# Optional
 JSEARCH_API_KEY=your_jsearch_api_key_here
-APIFY_API_TOKEN=your_apify_token_here
+ALLOWED_ORIGINS=http://localhost:3000
 ```
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### POST `/api/analyze`
-Upload resume and get AI analysis
+Upload resume and get AI analysis.
 
 **Request:**
-- `file`: PDF file
+- `file`: PDF file (max 10MB)
 - `location`: Preferred job location (India, USA, UK, Remote, All)
 
 **Response:**
@@ -181,7 +179,7 @@ Upload resume and get AI analysis
 ```
 
 ### GET `/api/jobs`
-Fetch matching job opportunities
+Fetch matching job opportunities from JoinRise.
 
 **Query Parameters:**
 - `keywords`: Job search keywords
@@ -207,7 +205,7 @@ Fetch matching job opportunities
 ```
 
 ### POST `/api/keywords`
-Generate job search keywords from summary
+Generate job search keywords from summary.
 
 **Request:**
 ```json
@@ -226,7 +224,10 @@ Generate job search keywords from summary
 }
 ```
 
-## 🌐 Deployment
+### GET `/health`
+Health check endpoint.
+
+## Deployment
 
 ### Deploy Backend to Railway
 
@@ -234,10 +235,9 @@ Generate job search keywords from summary
 2. Connect your GitHub repository
 3. Set environment variables:
    - `GEMINI_API_KEY`
-   - `JSEARCH_API_KEY` (optional)
-   - `APIFY_API_TOKEN` (optional)
+   - `ALLOWED_ORIGINS` (your Vercel frontend URL)
 4. Railway will auto-detect FastAPI and install dependencies
-5. Deploy! 🚀
+5. Deploy!
 
 ### Deploy Frontend to Vercel
 
@@ -246,9 +246,9 @@ Generate job search keywords from summary
 3. Set environment variable:
    - `NEXT_PUBLIC_API_URL` = your-railway-backend-url
 4. Vercel will auto-detect Next.js and build
-5. Deploy! 🚀
+5. Deploy!
 
-## 🎨 Design Highlights
+## Design Highlights
 
 - **Gradient backgrounds** with animated floating elements
 - **Glass morphism** effects for modern aesthetic
@@ -257,9 +257,8 @@ Generate job search keywords from summary
 - **Responsive grid layouts** that adapt to all screen sizes
 - **Interactive components** with hover effects and transitions
 - **Clean typography** using Inter font family
-- **Dark mode support** (coming soon)
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -269,23 +268,14 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Google Gemini API](https://ai.google.dev/) for AI capabilities
 - [Vercel](https://vercel.com) for hosting the frontend
 - [Railway](https://railway.app) for hosting the backend
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Framer Motion](https://www.framer.com/motion/) for animations
-- All the amazing open-source libraries used in this project
-
----
-
-<div align="center">
-
-Made with ❤️ for job seekers everywhere 🚀
-
-</div>

@@ -6,14 +6,19 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import requests
 import os
+import logging
 
 load_dotenv()
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 app = FastAPI(title="NextHire API", version="1.0.0")
 
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,6 +26,8 @@ app.add_middleware(
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 JSEARCH_API_KEY = os.getenv("JSEARCH_API_KEY")
+
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -48,19 +55,37 @@ def ask_gemini(prompt: str, max_tokens: int = 500) -> str:
         return "Gemini API key not configured"
 
     try:
-        response = model.generate_content(prompt)
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.GenerationConfig(
+                max_output_tokens=max_tokens,
+            ),
+        )
+        if response.text is None:
+            return "No response generated from AI"
         return response.text
     except Exception as e:
-        return f"Error: {str(e)}"
+        logger.error(f"Gemini API error: {e}")
+        return f"Error generating response: {str(e)}"
 
 
 @app.post("/api/analyze")
 async def analyze_resume(file: UploadFile = File(...), location: str = "India"):
-    if not file.filename.endswith(".pdf"):
+    if not file.filename or not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported")
 
+    contents = await file.read()
+    if len(contents) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="File size exceeds 10MB limit")
+
     try:
+        file.file.seek(0)
         resume_text = extract_text_from_pdf(file)
+
+        if not resume_text.strip():
+            raise HTTPException(
+                status_code=400, detail="Could not extract text from PDF"
+            )
 
         summary = ask_gemini(
             f"Summarize the following resume highlighting the key skills, experiences, and education in a clear, concise format:\n\n{resume_text}",
@@ -91,8 +116,13 @@ async def analyze_resume(file: UploadFile = File(...), location: str = "India"):
                 "keywords": keywords.replace("\n", "").strip(),
             },
         }
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Analysis error: {e}")
+        raise HTTPException(
+            status_code=500, detail="Failed to analyze resume. Please try again."
+        )
 
 
 @app.get("/api/jobs")
@@ -137,7 +167,7 @@ async def get_jobs(keywords: str, location: str = "India"):
                 if len(jobs) >= 15:
                     break
     except Exception as e:
-        print(f"Error fetching jobs: {e}")
+        logger.error(f"Error fetching jobs: {e}")
 
     return {"success": True, "data": jobs}
 
@@ -155,6 +185,11 @@ async def generate_keywords(request: KeywordsRequest):
 @app.get("/")
 async def root():
     return {"message": "NextHire API is running"}
+
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "version": "1.0.0"}
 
 
 if __name__ == "__main__":

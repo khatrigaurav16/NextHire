@@ -26,9 +26,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Home', href: '#', onClick: () => scrollToSection('home') },
+    { name: 'Upload', href: '#', onClick: () => scrollToSection('upload') },
     { name: 'Features', href: '#', onClick: () => scrollToSection('features') },
-    { name: 'How It Works', href: '#', onClick: () => scrollToSection('how-it-works') },
-    { name: 'Contact', href: '#', onClick: () => scrollToSection('contact') },
   ]
 
   return (

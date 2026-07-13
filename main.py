@@ -1,5 +1,5 @@
 import streamlit as st
-from src.helper import extract_text_from_pdf, ask_openai
+from src.helper import extract_text_from_pdf, ask_gemini
 from src.job_api import (
     fetch_joinrise_jobs,
     fetch_jsearch_jobs,
@@ -873,19 +873,19 @@ if uploaded_file:
         resume_text = extract_text_from_pdf(uploaded_file)
 
     with st.spinner("🔄 Analyzing resume with AI..."):
-        summary = ask_openai(
+        summary = ask_gemini(
             f"Summarize the following resume highlighting the key skills, experiences, and education in a clear, concise format:\n\n{resume_text}",
             max_tokens=500,
         )
 
     with st.spinner("🔄 Identifying skill gaps..."):
-        skillgaps = ask_openai(
+        skillgaps = ask_gemini(
             f"Based on the following resume, identify skill gaps and areas for improvement. Format as bullet points:\n\n{resume_text}",
             max_tokens=400,
         )
 
     with st.spinner("🔄 Creating personalized roadmap..."):
-        roadmap = ask_openai(
+        roadmap = ask_gemini(
             f"Based on the resume and skill gaps, create a learning roadmap with specific steps:\n\nResume:\n{resume_text}\n\nSkill Gaps:\n{skillgaps}",
             max_tokens=400,
         )
@@ -941,7 +941,7 @@ if uploaded_file:
 
     with tab4:
         with st.spinner("🔄 Generating search keywords..."):
-            keywords = ask_openai(
+            keywords = ask_gemini(
                 f"Based on this resume summary, suggest 3-5 job search keywords. Return only comma-separated keywords:\n\n{summary}",
                 max_tokens=50,
             )

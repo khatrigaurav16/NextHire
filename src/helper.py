@@ -1,9 +1,4 @@
-import sys
 import os
-
-_additional_path = r"C:\Users\gaura\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages"
-if _additional_path not in sys.path:
-    sys.path.insert(0, _additional_path)
 
 import fitz
 from dotenv import load_dotenv
@@ -23,7 +18,7 @@ def extract_text_from_pdf(uploaded_file):
     return text
 
 
-def ask_openai(prompt, max_tokens=500):
+def ask_gemini(prompt, max_tokens=500):
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash", contents=prompt
