@@ -77,3 +77,10 @@ dmypy.json
 *.swp
 *.swo
 .cache/
+nul
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Ruff
+.ruff_cache/

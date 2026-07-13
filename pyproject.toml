@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "apify-client>=2.1.0",
     "openai>=2.1.0",
-    "pymupdf>=1.26.4",
+    "PyMuPDF>=1.26.4",
     "python-dotenv>=1.1.1",
     "streamlit>=1.50.0",
     "requests>=2.31.0",

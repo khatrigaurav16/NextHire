@@ -44,7 +44,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-8 z-40"
         >
           <span className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium border border-white/20">
             <Sparkles className="w-4 h-4 mr-2 text-yellow-400" />
@@ -83,7 +83,10 @@ export default function Hero() {
           transition={{ delay: 0.6 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <button className="btn-primary text-lg px-8 py-4">
+          <button 
+            onClick={() => document.getElementById('upload')?.scrollIntoView({ behavior: 'smooth' })}
+            className="btn-primary text-lg px-8 py-4"
+          >
             Start Free Analysis
           </button>
           <button className="bg-white/10 backdrop-blur-sm text-white font-semibold px-8 py-4 rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300">
@@ -117,21 +120,6 @@ export default function Hero() {
           ))}
         </motion.div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-      >
-        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1.5 h-3 bg-white/80 rounded-full mt-2"
-          />
-        </div>
-      </motion.div>
     </section>
   )
 }

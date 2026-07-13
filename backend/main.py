@@ -1,10 +1,3 @@
-import sys
-import os
-
-_additional_path = r"C:\Users\gaura\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages"
-if _additional_path not in sys.path:
-    sys.path.insert(0, _additional_path)
-
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel

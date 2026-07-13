@@ -16,11 +16,19 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    setIsMobileMenuOpen(false)
+  }
+
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Features', href: '#features' },
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '#', onClick: () => scrollToSection('home') },
+    { name: 'Features', href: '#', onClick: () => scrollToSection('features') },
+    { name: 'How It Works', href: '#', onClick: () => scrollToSection('how-it-works') },
+    { name: 'Contact', href: '#', onClick: () => scrollToSection('contact') },
   ]
 
   return (
@@ -52,9 +60,9 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link, index) => (
-              <motion.a
+              <motion.button
                 key={link.name}
-                href={link.href}
+                onClick={link.onClick}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -63,12 +71,13 @@ export default function Navbar() {
                 }`}
               >
                 {link.name}
-              </motion.a>
+              </motion.button>
             ))}
             <motion.button
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
+              onClick={() => scrollToSection('upload')}
               className="btn-primary hidden md:block"
             >
               Get Started
@@ -97,16 +106,15 @@ export default function Navbar() {
           >
             <div className="py-4 px-4 space-y-3">
               {navLinks.map((link) => (
-                <a
+                <button
                   key={link.name}
-                  href={link.href}
-                  className="block text-slate-700 font-medium py-2 hover:text-primary-600 transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={link.onClick}
+                  className="block text-slate-700 font-medium py-2 hover:text-primary-600 transition-colors w-full text-left"
                 >
                   {link.name}
-                </a>
+                </button>
               ))}
-              <button className="btn-primary w-full mt-4">Get Started</button>
+              <button onClick={() => scrollToSection('upload')} className="btn-primary w-full mt-4">Get Started</button>
             </div>
           </motion.div>
         )}
